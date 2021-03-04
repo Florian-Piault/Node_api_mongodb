@@ -1,9 +1,9 @@
-const mongoose = require('mongoose') //=> https://www.npmjs.com/package/mongoose
+const mongoose = require('mongoose'); //=> https://www.npmjs.com/package/mongoose
 
 class MongoClass {
 	// Inject value
 	constructor() {
-		this.mongoUrl = process.env.MONGO_URL
+		this.mongoUrl = process.env.MONGO_URL;
 	}
 
 	// Start connection
@@ -15,9 +15,9 @@ class MongoClass {
 					useUnifiedTopology: true,
 				})
 				.then((db) => resolve({ db: db, url: this.mongoUrl }))
-				.catch((dbError) => reject('MongoDB not connected', dbError))
-		})
+				.catch((dbError) => reject('MongoDB not connected', dbError));
+		});
 	}
 }
 
-module.exports = MongoClass
+module.exports = MongoClass;
