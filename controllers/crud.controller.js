@@ -14,15 +14,20 @@ function createOne(req, res) {
 		});
 }
 
-function getAll(req, res) {
-	postModel
-		.find()
-		.then((data) => {
-			return res.send(data);
-		})
-		.catch((err) => {
-			return req.send(err);
+function getAll() {
+	return new Promise((resolve, reject) => {
+		postModel.find((err, data) => {
+			return err ? reject(err) : resolve(data);
 		});
+	});
+}
+
+function findById(id) {
+	return new Promise((res, rej) => {
+		postModel.findById(id, (err, data) => {
+			return err ? rej('pas de ID', err) : res(data);
+		});
+	});
 }
 
 function deleteOne(req, res) {
@@ -36,4 +41,4 @@ function deleteOne(req, res) {
 		});
 }
 
-module.exports = { createOne, getAll, deleteOne };
+module.exports = { createOne, getAll, deleteOne, findById };

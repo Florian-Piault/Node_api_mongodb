@@ -6,6 +6,7 @@ const {
 	createOne,
 	getAll,
 	deleteOne,
+	findById,
 } = require('../controllers/crud.controller');
 const postModel = require('../models/post.model');
 
@@ -25,11 +26,27 @@ class RouterClass {
 		});
 
 		this.router.get('/:endpoint/all', (req, res) => {
-			getAll(req, res);
+			getAll()
+				.then((data) => {
+					return res.json({ data, err: null });
+				})
+				.catch((err) => {
+					return res.json({ data: null, err });
+				});
 		});
 
 		this.router.delete('/:endpoint', (req, res) => {
 			deleteOne(req, res);
+		});
+
+		this.router.get('/:endpoint', (req, res) => {
+			findById(req.body.id)
+				.then((data) => {
+					return res.json({ data, err: null });
+				})
+				.catch((err) => {
+					return res.json({ data: null, err });
+				});
 		});
 	}
 
