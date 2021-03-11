@@ -1,62 +1,85 @@
-// Node
-const express = require('express');
+/* 
+Imports
+*/
+    // Node
+    const express = require('express');
+    const Controllers = require('../controller/index');
+//
 
-// Inner
-const {
-	createOne,
-	getAll,
-	deleteOne,
-	findById,
-} = require('../controllers/crud.controller');
-const postModel = require('../models/post.model');
+/* 
+Defintiion
+*/
+    class RouterClass{
+        constructor(){
+            this.router = express.Router();
+        }
 
-class RouterClass {
-	constructor() {
-		this.router = express.Router();
-	}
+        routes(){
+            // TODO: create service to send data
+            
+            // Define API route
+            this.router.get('/', (req, res) => {
+                // Rerturn JSON data
+                return res.json( { msg: "Hello API" } )
+            })
 
-	routes() {
-		// Main API route definition
-		this.router.get('/', (req, res) => {
-			return res.json({ msg: 'hello from the api' });
-		});
+            // Define API route to create on data
+            this.router.post('/:endpoint', (req, res) => {
+                // TODO: check body data
+                Controllers[req.params.endpoint].createOne(req)
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
 
-		this.router.post('/:endpoint', (req, res) => {
-			createOne(req, res);
-		});
+            // Define API route to get all data
+            this.router.get('/:endpoint', (req, res) => {
+                // User the controller to get data
+                Controllers[req.params.endpoint].readAll()
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
 
-		this.router.get('/:endpoint/all', (req, res) => {
-			getAll()
-				.then((data) => {
-					return res.json({ data, err: null });
-				})
-				.catch((err) => {
-					return res.json({ data: null, err });
-				});
-		});
+            // Define API route to get one data
+            this.router.get('/:endpoint/:id', (req, res) => {
+                // User the controller to get data
+                Controllers[req.params.endpoint].readOne(req)
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
 
-		this.router.delete('/:endpoint', (req, res) => {
-			deleteOne(req, res);
-		});
+            // Define API route to update one data
+            this.router.put('/:endpoint/:id', (req, res) => {
+                // TODO: check body data
+                // TODO: check id user can update
+                // User the controller to get data
+                Controllers[req.params.endpoint].updateOne(req)
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
 
-		this.router.get('/:endpoint', (req, res) => {
-			findById(req.body.id)
-				.then((data) => {
-					return res.json({ data, err: null });
-				})
-				.catch((err) => {
-					return res.json({ data: null, err });
-				});
-		});
-	}
+            // Define API route to delete one data
+            this.router.delete('/:endpoint/:id', (req, res) => {
+                // User the controller to get data
+                // TODO: check id user can update
+                Controllers[req.params.endpoint].deleteOne(req)
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
+        }
 
-	init() {
-		// Get route fonctions
-		this.routes();
+        init(){
+            // Get route fonctions
+            this.routes();
 
-		// Sendback router
-		return this.router;
-	}
-}
+            // Sendback router
+            return this.router;
+        }
+    }
 
-module.exports = RouterClass;
+//
+
+/* 
+Export
+*/
+    module.exports = RouterClass;
+//

@@ -2,14 +2,12 @@ const mongoose = require('mongoose'); //=> https://www.npmjs.com/package/mongoos
 const { Schema } = mongoose;
 
 const MySchema = new Schema({
-	title: String,
 	content: String,
-	author: String,
 	dateCreated: {
 		type: Date,
 		default: new Date(),
 	},
 });
 
-const MyModel = mongoose.model('post', MySchema);
+const MyModel = mongoose.model('comment', MySchema);
 module.exports = MyModel;
