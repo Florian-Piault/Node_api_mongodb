@@ -1,8 +1,16 @@
-const { Model } = require('mongoose');
 
-const Models = {
-	post: require('./post.model'),
-	comment: require('./comment.model'),
-};
+/* 
+Definition
+*/
+    const Models = {
+        post: require('./post.model'),
+        user: require('./user.model'),
+        comment: require('./comment.model'),
+    }
+//
 
-module.exports = Models;
+/* 
+Export
+*/
+    module.exports = Models;
+//

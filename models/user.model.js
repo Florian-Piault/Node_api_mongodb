@@ -1,25 +1,63 @@
-const mangoose = require('mangoose');
-const { Schema } = mangoose;
+/* 
+Imports
+*/
+    const jwt = require('jsonwebtoken'); //=> https://www.npmjs.com/package/jsonwebtoken
+    const mongoose = require('mongoose'); //=> https://www.npmjs.com/package/mongoose
+    const { Schema } = mongoose;
+//
 
-const MySchema = new Schema({
-	email: {
-		unique: true,
-		type: String,
-	},
-	password: String,
-	firstname: String,
-	lastname: String,
+/* 
+Definition
+*/
+    const MySchema = new Schema({
+        email: { 
+            unique: true, 
+            type: String 
+        },
+        password: String,
+        firstname: String,
+        lastname: String,
+        
+        dateCreated: {
+            type: Date,
+            default: new Date()
+        },
+        lastConnection: {
+            type: Date,
+            default: new Date()
+        }
+    })
+//
 
-	DateCreated: {
-		type: Date,
-		default: new Date(),
-	},
+/* 
+Methods
+*/
+    MySchema.methods.generateJwt = user => {
+        // Set expiration
+        const expiryToken = new Date();
+        expiryToken.setDate( expiryToken.getDate() + 59 );
 
-	LastConnexion: {
-		type: Date,
-		default: new Date(),
-	},
-});
+        // Set token
+        const jwtObject = {
+            _id: user._id,
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            lastConnection: user.lastConnection,
 
-const MyModel = mongoose.model('user', MySchema);
-module.exports = MyModel;
+            // Set timeout
+            expireIn: '5s',
+            exp: parseInt( expiryToken.getTime() / 100, 10 )
+        }
+
+        // Retunr JWT
+        return jwt.sign( jwtObject, process.env.JWT_SECRET );
+    };
+//
+
+/* 
+Exports
+*/
+    const MyModel = mongoose.model('user', MySchema);
+    module.exports = MyModel;
+//
