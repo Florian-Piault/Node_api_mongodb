@@ -1,65 +1,56 @@
 /* 
 Imports
 */
-// Node
-const express = require('express');
-const Controllers = require('../controller/index');
+    // Node
+    const express = require('express');
+    const Controllers = require('../controller/index');
 //
 
 /* 
 Defintiion
 */
-class RouterClass {
-	constructor({ passport }) {
-		this.router = express.Router();
-		this.passport = passport;
-	}
+    class RouterClass{
+        constructor( { passport } ){
+            this.router = express.Router();
+            this.passport = passport
+        }
 
-	routes() {
-		// Define API route to register user
-		this.router.post('/register', (req, res) => {
-			Controllers.auth
-				.register(req)
-				.then((apiResponse) => {
-					res.json({ data: apiResponse, err: null });
-				})
-				.catch((apiError) => {
-					res.json({ data: null, err: apiError });
-				});
-		});
+        routes(){
+            // Define API route to register user
+            this.router.post('/register', (req, res) => {
+                // TODO: check body data
+                Controllers.auth.register(req)
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
 
-		// Define API route to log user
-		this.router.post('/login', (req, res) => {
-			// TODO: check body data
-			Controllers.auth
-				.login(req, res)
-				.then((apiResponse) => res.json({ data: apiResponse, err: null }))
-				.catch((apiError) => res.json({ data: null, err: apiError }));
-		});
+            // Define API route to log user
+            this.router.post('/login', (req, res) => {
+                // TODO: check body data
+                Controllers.auth.login(req, res)
+                .then( apiResponse => res.json( { data: apiResponse, err: null } ))
+                .catch( apiError => res.json( { data: null, err: apiError } ))
+            })
 
-		// Define AUTH route to get user info from JWT
-		this.router.get(
-			'/me',
-			this.passport.authenticate('jwt', { session: false }),
-			(req, res) => {
-				//
-			},
-		);
-	}
+            // Define AUTH route to get user info from JWT
+            this.router.get('/me', this.passport.authenticate('jwt', { session: false }), (req, res) => {
+                //
+            })
+        }
 
-	init() {
-		// Get route fonctions
-		this.routes();
+        init(){
+            // Get route fonctions
+            this.routes();
 
-		// Sendback router
-		return this.router;
-	}
-}
+            // Sendback router
+            return this.router;
+        }
+    }
 
 //
 
 /* 
 Export
 */
-module.exports = RouterClass;
+    module.exports = RouterClass;
 //
